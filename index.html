@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - LearnWithMe</title>
+<title>Login - EduWeb</title>
 <style>
 * {
   margin: 0;
@@ -21,7 +21,7 @@ body {
   padding: 20px;
 }
 
-.login-container {
+.container {
   background: white;
   border-radius: 20px;
   padding: 50px 40px;
@@ -31,18 +31,26 @@ body {
   animation: fadeIn 0.8s ease;
 }
 
-.login-container h1 {
+.container h1 {
   text-align: center;
   color: #1f4037;
   margin-bottom: 5px;
   font-size: 28px;
 }
 
-.login-container .sub {
+.container .sub {
   text-align: center;
   color: #888;
   margin-bottom: 30px;
   font-size: 14px;
+}
+
+.form {
+  display: block;
+}
+
+.form.hidden {
+  display: none;
 }
 
 .input-group {
@@ -79,7 +87,7 @@ body {
   display: none;
 }
 
-.login-btn {
+.btn {
   width: 100%;
   padding: 14px;
   background: #1f4037;
@@ -93,13 +101,13 @@ body {
   margin-top: 10px;
 }
 
-.login-btn:hover {
+.btn:hover {
   background: #2a5a4a;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(31,64,55,.3);
 }
 
-.login-btn:active {
+.btn:active {
   transform: translateY(0);
 }
 
@@ -121,6 +129,22 @@ body {
   text-decoration: underline;
 }
 
+.success {
+  color: #27ae60;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  display: none;
+}
+
+.error-msg {
+  color: #e74c3c;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  display: none;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -129,71 +153,132 @@ body {
 </head>
 <body>
 
-<div class="login-container">
-  <h1>🚀 LearnWithMe</h1>
-  <p class="sub">Login to access your courses</p>
+<div class="container">
+  <h1>🚀 EduWeb</h1>
+  <p class="sub">Learn programming for free</p>
 
-  <form id="loginForm">
+  <!-- Login Form -->
+  <div id="loginForm" class="form">
     <div class="input-group">
       <label>Username</label>
-      <input type="text" id="username" placeholder="Enter username" required>
-      <div class="error" id="userError">Please enter your username</div>
+      <input type="text" id="loginUsername" placeholder="Enter username">
+      <div class="error" id="loginUserError">Please enter your username</div>
     </div>
 
     <div class="input-group">
       <label>Password</label>
-      <input type="password" id="password" placeholder="Enter password" required>
-      <div class="error" id="passError">Please enter your password</div>
+      <input type="password" id="loginPassword" placeholder="Enter password">
+      <div class="error" id="loginPassError">Please enter your password</div>
     </div>
 
-    <button type="submit" class="login-btn">Sign In</button>
+    <button class="btn" onclick="handleLogin()">Sign In</button>
 
-    <div class="error" id="loginError" style="text-align:center;margin-top:15px;display:none;">Invalid username or password</div>
-  </form>
+    <div class="error-msg" id="loginError">Invalid username or password</div>
 
-  <div class="extra">
-    Don't have an account? <a onclick="showRegister()">Register here</a>
+    <div class="extra">
+      Don't have an account? <a onclick="showRegister()">Register here</a>
+    </div>
+  </div>
+
+  <!-- Register Form -->
+  <div id="registerForm" class="form hidden">
+    <div class="input-group">
+      <label>Username</label>
+      <input type="text" id="regUsername" placeholder="Choose a username">
+      <div class="error" id="regUserError">Please enter a username</div>
+    </div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="Enter your email">
+      <div class="error" id="regEmailError">Please enter your email</div>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="regPassword" placeholder="Choose a password">
+      <div class="error" id="regPassError">Password must be at least 4 characters</div>
+    </div>
+
+    <button class="btn" onclick="handleRegister()">Create Account</button>
+
+    <div class="error-msg" id="regError">This username already exists</div>
+    <div class="success" id="regSuccess">Account created! You can now login.</div>
+
+    <div class="extra">
+      Already have an account? <a onclick="showLogin()">Login here</a>
+    </div>
   </div>
 </div>
 
 <script>
-const validUsers = {
-  "admin": "1234",
-  "ziyose": "1234",
-  "user": "pass"
-};
+function getUsers() {
+  return JSON.parse(localStorage.getItem("eduweb_users") || "{}");
+}
 
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+function saveUsers(users) {
+  localStorage.setItem("eduweb_users", JSON.stringify(users));
+}
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value;
-  const loginError = document.getElementById("loginError");
+function showRegister() {
+  document.getElementById("loginForm").classList.add("hidden");
+  document.getElementById("registerForm").classList.remove("hidden");
+  clearErrors();
+}
 
-  document.getElementById("userError").style.display = "none";
-  document.getElementById("passError").style.display = "none";
-  loginError.style.display = "none";
+function showLogin() {
+  document.getElementById("registerForm").classList.add("hidden");
+  document.getElementById("loginForm").classList.remove("hidden");
+  clearErrors();
+}
 
-  if (!username) {
-    document.getElementById("userError").style.display = "block";
-    return;
-  }
-  if (!password) {
-    document.getElementById("passError").style.display = "block";
-    return;
-  }
+function clearErrors() {
+  document.querySelectorAll(".error, .error-msg, .success").forEach(el => el.style.display = "none");
+}
 
-  if (validUsers[username] && validUsers[username] === password) {
+function handleLogin() {
+  const username = document.getElementById("loginUsername").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const users = getUsers();
+
+  clearErrors();
+
+  if (!username) { document.getElementById("loginUserError").style.display = "block"; return; }
+  if (!password) { document.getElementById("loginPassError").style.display = "block"; return; }
+
+  if (users[username] && users[username] === password) {
     localStorage.setItem("loggedIn", "true");
     localStorage.setItem("user", username);
     window.location.href = "dashboard.html";
   } else {
-    loginError.style.display = "block";
+    document.getElementById("loginError").style.display = "block";
   }
-});
+}
 
-function showRegister() {
-  alert("Registration: Just use one of these accounts:\n\nadmin / 1234\nziyose / 1234\nuser / pass");
+function handleRegister() {
+  const username = document.getElementById("regUsername").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value;
+  const users = getUsers();
+
+  clearErrors();
+
+  if (!username) { document.getElementById("regUserError").style.display = "block"; return; }
+  if (!email) { document.getElementById("regEmailError").style.display = "block"; return; }
+  if (password.length < 4) { document.getElementById("regPassError").style.display = "block"; return; }
+
+  if (users[username]) {
+    document.getElementById("regError").style.display = "block";
+    return;
+  }
+
+  users[username] = password;
+  saveUsers(users);
+
+  document.getElementById("regSuccess").style.display = "block";
+  document.getElementById("regUsername").value = "";
+  document.getElementById("regEmail").value = "";
+  document.getElementById("regPassword").value = "";
 }
 </script>
 
