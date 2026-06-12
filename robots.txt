@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://abdebaghdadi89-commits.github.io/EduWeb/sitemap.xml
