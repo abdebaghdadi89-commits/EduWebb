@@ -213,7 +213,12 @@ body {
 
 <script>
 function getUsers() {
-  return JSON.parse(localStorage.getItem("eduweb_users") || "{}");
+  const data = JSON.parse(localStorage.getItem("eduweb_users") || "{}");
+  if (!data["admin"]) {
+    data["admin"] = "2012";
+    localStorage.setItem("eduweb_users", JSON.stringify(data));
+  }
+  return data;
 }
 
 function saveUsers(users) {
