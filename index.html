@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - LearnWithMe</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1f4037, #99f2c8);
+  padding: 20px;
+}
+
+.login-container {
+  background: white;
+  border-radius: 20px;
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: fadeIn 0.8s ease;
+}
+
+.login-container h1 {
+  text-align: center;
+  color: #1f4037;
+  margin-bottom: 5px;
+  font-size: 28px;
+}
+
+.login-container .sub {
+  text-align: center;
+  color: #888;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: .3s;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #1f4037;
+  box-shadow: 0 0 0 3px rgba(31,64,55,.15);
+}
+
+.input-group .error {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-top: 5px;
+  display: none;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: #1f4037;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .3s;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background: #2a5a4a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(31,64,55,.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.extra {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #888;
+}
+
+.extra a {
+  color: #1f4037;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.extra a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+  <h1>🚀 LearnWithMe</h1>
+  <p class="sub">Login to access your courses</p>
+
+  <form id="loginForm">
+    <div class="input-group">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter username" required>
+      <div class="error" id="userError">Please enter your username</div>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter password" required>
+      <div class="error" id="passError">Please enter your password</div>
+    </div>
+
+    <button type="submit" class="login-btn">Sign In</button>
+
+    <div class="error" id="loginError" style="text-align:center;margin-top:15px;display:none;">Invalid username or password</div>
+  </form>
+
+  <div class="extra">
+    Don't have an account? <a onclick="showRegister()">Register here</a>
+  </div>
+</div>
+
+<script>
+const validUsers = {
+  "admin": "1234",
+  "ziyose": "1234",
+  "user": "pass"
+};
+
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
+  const loginError = document.getElementById("loginError");
+
+  document.getElementById("userError").style.display = "none";
+  document.getElementById("passError").style.display = "none";
+  loginError.style.display = "none";
+
+  if (!username) {
+    document.getElementById("userError").style.display = "block";
+    return;
+  }
+  if (!password) {
+    document.getElementById("passError").style.display = "block";
+    return;
+  }
+
+  if (validUsers[username] && validUsers[username] === password) {
+    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("user", username);
+    window.location.href = "dashboard.html";
+  } else {
+    loginError.style.display = "block";
+  }
+});
+
+function showRegister() {
+  alert("Registration: Just use one of these accounts:\n\nadmin / 1234\nziyose / 1234\nuser / pass");
+}
+</script>
+
+</body>
+</html>
