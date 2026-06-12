@@ -518,15 +518,17 @@ if (!localStorage.getItem("loggedIn")) {
       <h2>📩 Contact Us</h2>
       <p>Email: abdebahdadi@gmail.com</p>
       <p>Instagram: ziyose_75</p>
-      <a href="https://mail.google.com/mail/u/0/#sent?compose=new" target="_blank" class="btn">Send Message</a>
+      <a href="mailto:abdebahdadi@gmail.com" target="_blank" class="btn">Send Message</a>
     </div>
   </section>
 
 </div>
 
-<form action="https://formsubmit.co/abdebahdadi@gmail.com" method="POST">
+<form action="https://formsubmit.co/abdebahdadi@gmail.com" method="POST" target="_blank">
   <div class="container" style="padding-top:0;">
     <h2 class="section-title">✉️ Send a Message</h2>
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
     <input type="text" name="name" placeholder="Your Name" required>
     <input type="email" name="email" placeholder="Your Email" required>
     <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
@@ -622,6 +624,8 @@ const topBtn = document.getElementById("topBtn");
 window.addEventListener("scroll", () => {
   topBtn.style.display = window.scrollY > 400 ? "block" : "none";
 });
+
+
 </script>
 
 </body>
